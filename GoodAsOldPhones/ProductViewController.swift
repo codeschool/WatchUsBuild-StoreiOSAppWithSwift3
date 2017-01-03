@@ -42,7 +42,18 @@ class ProductViewController: UIViewController {
         order.product = product
         
         var orders = Orders.readOrdersFromArchive()
-        orders?.append(order)
+        
+        /* fix: Added 01/03/2017
+                We forgot to add this logic during the recording of the Watch Us Build
+                Check if the orders array exists.  If it doesn't, then create a new array with a single order in it.
+                If the orders array does exist, then just append the new order to it.
+        */
+        if(orders == nil) {
+            orders = [order]
+        } else {
+            orders?.append(order)
+        }
+        
         if let orders = orders {
             if(Orders.saveOrdersToArchive(orders: orders)) {
                 present(alertController, animated: true, completion: nil)
